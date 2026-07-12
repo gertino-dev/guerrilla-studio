@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guerrilla Studio — Montage vidéo freelance</title>
+<meta name="description" content="Guerrilla Studio, studio de montage vidéo freelance. Portfolio, showreel et contact.">
+
+<meta property="og:title" content="Guerrilla Studio — Montage vidéo freelance">
+<meta property="og:description" content="Portfolio vidéo de Guerrilla Studio, monteur/vidéaste freelance.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav container">
+    <a href="#hero" class="logo">Guerrilla Studio</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section id="hero" class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content reveal">
+      <p class="eyebrow">Monteur &amp; Vidéaste freelance</p>
+      <h1>Guerrilla Studio</h1>
+      <p class="hero-tagline">Le montage qui donne du rythme à vos images.</p>
+      <div class="hero-actions">
+        <a href="#portfolio" class="btn btn-primary">Voir le portfolio</a>
+        <a href="#contact" class="btn btn-ghost">Me contacter</a>
+      </div>
+    </div>
+    <div class="scroll-cue" aria-hidden="true"><span></span></div>
+  </section>
+
+  <section id="about" class="about">
+    <div class="container about-grid reveal">
+      <div class="about-text">
+        <p class="eyebrow">À propos</p>
+        <h2>Un œil pour le rythme, une oreille pour l'image</h2>
+        <p>
+          Guerrilla Studio est le studio de montage vidéo de Gertino, monteur et vidéaste
+          freelance. Du clip promotionnel aux productions multicaméras en passant par la
+          captation d'évènements et de concerts, chaque projet est monté avec la même
+          exigence : raconter une histoire claire, rythmée et fidèle à son intention.
+        </p>
+        <p>
+          Toutes les vidéos ci-dessous sont importées automatiquement depuis la chaîne
+          YouTube <a href="https://www.youtube.com/@GertinoVideaste" target="_blank" rel="noopener">@GertinoVideaste</a> —
+          aucune mise à jour manuelle n'est nécessaire, le portfolio se tient toujours à jour.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="portfolio" class="portfolio">
+    <div class="container reveal">
+      <p class="eyebrow">Portfolio</p>
+      <h2>Dernières productions</h2>
+      <div id="videoGrid" class="video-grid" aria-live="polite">
+        <p class="grid-status" id="gridStatus">Chargement des vidéos…</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="container reveal">
+      <p class="eyebrow">Contact</p>
+      <h2>Un projet à monter ?</h2>
+      <p class="contact-text">
+        Discutons de votre projet vidéo — clip, évènement, contenu sponsorisé ou podcast.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:contact@guerrilla-studio.com" class="btn btn-primary">contact@guerrilla-studio.com</a>
+        <a href="https://www.youtube.com/@GertinoVideaste" target="_blank" rel="noopener" class="btn btn-ghost">YouTube</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>&copy; <span id="year"></span> Guerrilla Studio. Tous droits réservés.</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+  <div class="lightbox-content">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Fermer">&times;</button>
+    <div class="lightbox-player" id="lightboxPlayer"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
