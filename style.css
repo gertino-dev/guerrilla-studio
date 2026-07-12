@@ -1,10 +1,10 @@
 :root {
-  --bg: #0b0b0d;
-  --bg-alt: #131316;
-  --text: #f3f1ea;
-  --text-muted: #a8a5a0;
-  --accent: #c9a24a;
-  --accent-dim: #8a7233;
+  --bg: #060a12;
+  --bg-alt: #0d1420;
+  --text: #eef2f7;
+  --text-muted: #9aa7b8;
+  --accent: #4a90d9;
+  --accent-dim: #2f6bab;
   --border: rgba(255, 255, 255, 0.08);
   --font-display: 'Playfair Display', serif;
   --font-body: 'Montserrat', sans-serif;
@@ -120,13 +120,15 @@ h1, h2 {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, #1c1c20 0%, #0b0b0d 70%);
+  background: url('assets/hero-portrait.png') center 15% / cover no-repeat, var(--bg);
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(11,11,13,1));
+  background:
+    linear-gradient(to bottom, rgba(6,10,18,0.35), rgba(6,10,18,0.97)),
+    linear-gradient(to right, rgba(6,10,18,0.75), rgba(6,10,18,0.2));
 }
 
 .hero-content {
@@ -226,6 +228,12 @@ section { padding: 7rem 0; }
 .grid-status {
   color: var(--text-muted);
   grid-column: 1 / -1;
+}
+
+.grid-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
 }
 
 .video-card {

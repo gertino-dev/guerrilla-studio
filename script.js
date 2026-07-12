@@ -1,16 +1,21 @@
 // Pas de backoffice : les vidéos sont lues en direct depuis le flux RSS public
-// de la chaîne YouTube à chaque chargement de la page.
-const CHANNEL_ID = 'UCKHgYX0vGJ_hnzshUNARHXQ'; // @GertinoVideaste
+// de la chaîne à chaque chargement de la page.
+const CHANNEL_ID = 'UCKHgYX0vGJ_hnzshUNARHXQ';
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
-// Le flux RSS de YouTube n'envoie pas d'en-têtes CORS : rss2json le lit
-// côté serveur et le renvoie en JSON, consultable directement depuis le navigateur.
+// Le flux RSS n'envoie pas d'en-têtes CORS : rss2json le lit côté serveur et
+// le renvoie en JSON, consultable directement depuis le navigateur.
 const FEED_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+
+const PAGE_SIZE = 6;
 
 const grid = document.getElementById('videoGrid');
 const gridStatus = document.getElementById('gridStatus');
-const heroBg = document.getElementById('heroBg');
+const showMoreBtn = document.getElementById('showMoreBtn');
 const lightbox = document.getElementById('lightbox');
 const lightboxPlayer = document.getElementById('lightboxPlayer');
+
+let allVideos = [];
+let shownCount = 0;
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -45,9 +50,21 @@ function videoCard(video) {
   return card;
 }
 
+function renderMore() {
+  const next = allVideos.slice(shownCount, shownCount + PAGE_SIZE);
+  next.forEach((video) => grid.appendChild(videoCard(video)));
+  shownCount += next.length;
+  showMoreBtn.hidden = shownCount >= allVideos.length;
+}
+
+showMoreBtn.addEventListener('click', renderMore);
+
 function openLightbox(videoId) {
-  lightboxPlayer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
-    title="Lecteur vidéo YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  // Domaine "no-cookie" + options qui masquent au maximum l'habillage
+  // de la plateforme source (pas de vidéos suggérées, pas d'annotations).
+  lightboxPlayer.innerHTML = `<iframe
+    src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&color=white"
+    title="Lecteur vidéo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowfullscreen></iframe>`;
   lightbox.hidden = false;
   document.body.style.overflow = 'hidden';
@@ -74,7 +91,7 @@ async function loadVideos() {
     if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('Flux invalide');
     if (!data.items.length) throw new Error('Aucune vidéo trouvée');
 
-    const videos = data.items.map((item) => {
+    allVideos = data.items.map((item) => {
       const id = item.guid?.replace('yt:video:', '');
       return {
         id,
@@ -85,26 +102,11 @@ async function loadVideos() {
     }).filter((v) => v.id);
 
     grid.innerHTML = '';
-    videos.forEach((video) => grid.appendChild(videoCard(video)));
-
-    if (videos[0]) {
-      heroBg.style.backgroundImage = `url(${videos[0].thumbnail.replace('hqdefault', 'maxresdefault')})`;
-      heroBg.style.backgroundSize = 'cover';
-      heroBg.style.backgroundPosition = 'center';
-      heroBg.style.opacity = '0.35';
-    }
+    shownCount = 0;
+    renderMore();
   } catch (err) {
-    gridStatus.textContent = "Impossible de charger les vidéos pour le moment.";
-    const link = document.createElement('a');
-    link.href = 'https://www.youtube.com/@GertinoVideaste';
-    link.target = '_blank';
-    link.rel = 'noopener';
-    link.className = 'btn btn-ghost';
-    link.style.marginTop = '1rem';
-    link.style.display = 'inline-block';
-    link.textContent = 'Voir la chaîne sur YouTube';
-    gridStatus.after(link);
-    console.error('Erreur de chargement du flux YouTube :', err);
+    gridStatus.textContent = 'Impossible de charger les vidéos pour le moment. Réessayez plus tard.';
+    console.error('Erreur de chargement des vidéos :', err);
   }
 }
 
