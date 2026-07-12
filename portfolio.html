@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio complet — Gertino</title>
+<meta name="description" content="Toutes les vidéos du portfolio de Gertino, monteur et vidéaste freelance.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav container">
+    <a href="index.html" class="logo">Gertino</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="portfolio portfolio-page">
+    <div class="container reveal">
+      <a href="index.html" class="back-link">&larr; Retour à l'accueil</a>
+      <p class="eyebrow">Portfolio</p>
+      <h2>Toutes les productions</h2>
+      <div id="videoGrid" class="video-grid" aria-live="polite">
+        <p class="grid-status" id="gridStatus">Chargement des vidéos…</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>&copy; <span id="year"></span> Gertino. Tous droits réservés.</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+  <div class="lightbox-content">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Fermer">&times;</button>
+    <div class="lightbox-player" id="lightboxPlayer"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

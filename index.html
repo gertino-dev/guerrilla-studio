@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gertino — Monteur &amp; Vidéaste freelance</title>
-<meta name="description" content="Gertino, monteur et vidéaste freelance. Portfolio, showreel et contact.">
+<meta name="description" content="Gertino, monteur et vidéaste freelance spécialisé en formats courts (Shorts, Ads). Portfolio, showreel et contact.">
 
 <meta property="og:title" content="Gertino — Monteur & Vidéaste freelance">
-<meta property="og:description" content="Portfolio vidéo de Gertino, monteur/vidéaste freelance.">
+<meta property="og:description" content="Portfolio vidéo de Gertino, monteur/vidéaste freelance spécialisé Shorts &amp; Ads.">
 <meta property="og:type" content="website">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,12 +33,10 @@
 
 <main>
   <section id="hero" class="hero">
+    <h1 class="sr-only">Gertino — Monteur &amp; Vidéaste freelance</h1>
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="container hero-content reveal">
-      <p class="eyebrow">Monteur &amp; Vidéaste freelance</p>
-      <h1>Gertino</h1>
-      <p class="hero-tagline">Le montage qui donne du rythme à vos images.</p>
       <div class="hero-actions">
         <a href="#portfolio" class="btn btn-primary">Voir le portfolio</a>
         <a href="#contact" class="btn btn-ghost">Me contacter</a>
@@ -58,6 +56,14 @@
           concerts, chaque projet est monté avec la même exigence : raconter une
           histoire claire, rythmée et fidèle à son intention.
         </p>
+        <p class="specialty-label">Spécialisé en :</p>
+        <ul class="specialty-tags">
+          <li>Shorts</li>
+          <li>Publicités (Ads)</li>
+          <li>Contenu sponsorisé</li>
+          <li>Multicam &amp; Podcast</li>
+          <li>Évènements &amp; concerts</li>
+        </ul>
         <p>
           Les vidéos ci-dessous sont importées automatiquement depuis ma chaîne —
           aucune mise à jour manuelle n'est nécessaire, le portfolio se tient toujours à jour.
@@ -70,11 +76,14 @@
     <div class="container reveal">
       <p class="eyebrow">Portfolio</p>
       <h2>Dernières productions</h2>
-      <div id="videoGrid" class="video-grid" aria-live="polite">
+      <div id="videoGrid" class="video-grid" data-limit="6" aria-live="polite">
         <p class="grid-status" id="gridStatus">Chargement des vidéos…</p>
       </div>
       <div class="grid-more-wrap">
-        <button id="showMoreBtn" class="btn btn-ghost" hidden>Voir plus</button>
+        <a href="portfolio.html" class="btn btn-more">
+          Voir tout le portfolio
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
   </section>
@@ -87,7 +96,7 @@
         Discutons de votre projet vidéo — clip, évènement, contenu sponsorisé ou podcast.
       </p>
       <div class="contact-links">
-        <a href="mailto:gertinobemahefa@gmail.com" class="btn btn-primary">gertinobemahefa@gmail.com</a>
+        <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=gertinobemahefa@gmail.com" target="_blank" rel="noopener" class="btn btn-primary btn-email">gertinobemahefa@gmail.com</a>
         <a href="https://wa.me/261389574357" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp</a>
         <a href="https://www.linkedin.com/in/gertino-bemahefa-6746b2389?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_android" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn</a>
       </div>

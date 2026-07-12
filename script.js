@@ -2,25 +2,20 @@
 // de la chaîne à chaque chargement de la page.
 const CHANNEL_ID = 'UCKHgYX0vGJ_hnzshUNARHXQ';
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
-// Le flux RSS n'envoie pas d'en-têtes CORS : rss2json le lit côté serveur et
-// le renvoie en JSON, consultable directement depuis le navigateur.
-const FEED_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
-
-const PAGE_SIZE = 6;
+// Le flux RSS n'envoie pas d'en-têtes CORS : on passe par un proxy en lecture
+// seule pour pouvoir le lire tel quel (toutes les entrées, sans limite artificielle).
+const FEED_URL = `https://corsproxy.io/?url=${encodeURIComponent(RSS_URL)}`;
 
 const grid = document.getElementById('videoGrid');
 const gridStatus = document.getElementById('gridStatus');
-const showMoreBtn = document.getElementById('showMoreBtn');
 const lightbox = document.getElementById('lightbox');
 const lightboxPlayer = document.getElementById('lightboxPlayer');
 
-let allVideos = [];
-let shownCount = 0;
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-document.getElementById('year').textContent = new Date().getFullYear();
-
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+function formatDate(date) {
+  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 function videoCard(video) {
@@ -50,15 +45,6 @@ function videoCard(video) {
   return card;
 }
 
-function renderMore() {
-  const next = allVideos.slice(shownCount, shownCount + PAGE_SIZE);
-  next.forEach((video) => grid.appendChild(videoCard(video)));
-  shownCount += next.length;
-  showMoreBtn.hidden = shownCount >= allVideos.length;
-}
-
-showMoreBtn.addEventListener('click', renderMore);
-
 function openLightbox(videoId) {
   // Domaine "no-cookie" + options qui masquent au maximum l'habillage
   // de la plateforme source (pas de vidéos suggérées, pas d'annotations).
@@ -76,8 +62,8 @@ function closeLightbox() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
-document.getElementById('lightboxBackdrop').addEventListener('click', closeLightbox);
+document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
+document.getElementById('lightboxBackdrop')?.addEventListener('click', closeLightbox);
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !lightbox.hidden) closeLightbox();
 });
@@ -86,24 +72,29 @@ async function loadVideos() {
   try {
     const res = await fetch(FEED_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const xmlText = await res.text();
+    const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
 
-    if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('Flux invalide');
-    if (!data.items.length) throw new Error('Aucune vidéo trouvée');
+    if (doc.querySelector('parsererror')) throw new Error('Flux invalide');
 
-    allVideos = data.items.map((item) => {
-      const id = item.guid?.replace('yt:video:', '');
-      return {
-        id,
-        title: item.title ?? 'Sans titre',
-        published: item.pubDate ?? new Date().toISOString(),
-        thumbnail: item.thumbnail || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
-      };
+    const entries = Array.from(doc.querySelectorAll('entry'));
+    if (!entries.length) throw new Error('Aucune vidéo trouvée');
+
+    let videos = entries.map((entry) => {
+      const id = entry.getElementsByTagNameNS('*', 'videoId')[0]?.textContent;
+      const title = entry.querySelector('title')?.textContent ?? 'Sans titre';
+      const publishedText = entry.querySelector('published')?.textContent;
+      const published = publishedText ? new Date(publishedText) : new Date();
+      const thumb = entry.getElementsByTagNameNS('*', 'thumbnail')[0]?.getAttribute('url')
+        ?? `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+      return { id, title, published, thumbnail: thumb };
     }).filter((v) => v.id);
 
+    const limit = Number(grid.dataset.limit);
+    if (limit) videos = videos.slice(0, limit);
+
     grid.innerHTML = '';
-    shownCount = 0;
-    renderMore();
+    videos.forEach((video) => grid.appendChild(videoCard(video)));
   } catch (err) {
     gridStatus.textContent = 'Impossible de charger les vidéos pour le moment. Réessayez plus tard.';
     console.error('Erreur de chargement des vidéos :', err);
@@ -115,11 +106,11 @@ loadVideos();
 // Nav mobile
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
-navToggle.addEventListener('click', () => {
+navToggle?.addEventListener('click', () => {
   const isOpen = navLinks.classList.toggle('is-open');
   navToggle.setAttribute('aria-expanded', String(isOpen));
 });
-navLinks.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+navLinks?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
   navLinks.classList.remove('is-open');
   navToggle.setAttribute('aria-expanded', 'false');
 }));
