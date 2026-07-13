@@ -1,10 +1,35 @@
-// Pas de backoffice : les vidéos sont lues en direct depuis le flux RSS public
-// de la chaîne à chaque chargement de la page.
-const CHANNEL_ID = 'UCKHgYX0vGJ_hnzshUNARHXQ';
-const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
-// Le flux RSS n'envoie pas d'en-têtes CORS : on passe par un proxy en lecture
-// seule pour pouvoir le lire tel quel (toutes les entrées, sans limite artificielle).
-const FEED_URL = `https://corsproxy.io/?url=${encodeURIComponent(RSS_URL)}`;
+// Pas de backoffice : les vidéos sont lues en direct depuis l'API YouTube
+// à chaque chargement de la page. Clé publique restreinte par référent HTTP
+// à gertino-dev.github.io — sans risque même visible dans ce fichier.
+const YT_API_KEY = 'AIzaSyCiGKacdGtyde-R4I6Z77Tvwt4yGzWXtDw';
+const UPLOADS_PLAYLIST_ID = 'UUKHgYX0vGJ_hnzshUNARHXQ';
+
+async function fetchAllVideos() {
+  const videos = [];
+  let pageToken = '';
+  do {
+    const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${UPLOADS_PLAYLIST_ID}&pageToken=${pageToken}&key=${YT_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    data.items.forEach((item) => {
+      const s = item.snippet;
+      if (!s?.resourceId?.videoId || s.title === 'Private video' || s.title === 'Deleted video') return;
+      videos.push({
+        id: s.resourceId.videoId,
+        title: s.title,
+        published: new Date(s.publishedAt),
+        thumbnail: s.thumbnails?.high?.url ?? s.thumbnails?.medium?.url ?? s.thumbnails?.default?.url,
+      });
+    });
+
+    pageToken = data.nextPageToken ?? '';
+  } while (pageToken);
+
+  videos.sort((a, b) => b.published - a.published);
+  return videos;
+}
 
 const grid = document.getElementById('videoGrid');
 const gridStatus = document.getElementById('gridStatus');
@@ -70,25 +95,8 @@ document.addEventListener('keydown', (e) => {
 
 async function loadVideos() {
   try {
-    const res = await fetch(FEED_URL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const xmlText = await res.text();
-    const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
-
-    if (doc.querySelector('parsererror')) throw new Error('Flux invalide');
-
-    const entries = Array.from(doc.querySelectorAll('entry'));
-    if (!entries.length) throw new Error('Aucune vidéo trouvée');
-
-    let videos = entries.map((entry) => {
-      const id = entry.getElementsByTagNameNS('*', 'videoId')[0]?.textContent;
-      const title = entry.querySelector('title')?.textContent ?? 'Sans titre';
-      const publishedText = entry.querySelector('published')?.textContent;
-      const published = publishedText ? new Date(publishedText) : new Date();
-      const thumb = entry.getElementsByTagNameNS('*', 'thumbnail')[0]?.getAttribute('url')
-        ?? `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-      return { id, title, published, thumbnail: thumb };
-    }).filter((v) => v.id);
+    let videos = await fetchAllVideos();
+    if (!videos.length) throw new Error('Aucune vidéo trouvée');
 
     const limit = Number(grid.dataset.limit);
     if (limit) videos = videos.slice(0, limit);
