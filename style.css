@@ -493,4 +493,9 @@ section { padding: 7rem 0; }
   }
 
   section { padding: 5rem 0; }
+
+  .hero {
+    align-items: flex-end;
+    padding-bottom: 4rem;
+  }
 }
