@@ -1,7 +1,7 @@
 // Pas de backoffice : les vidéos sont lues en direct depuis l'API YouTube
 // à chaque chargement de la page. Clé publique restreinte par référent HTTP
-// à gertino-dev.github.io — sans risque même visible dans ce fichier.
-const YT_API_KEY = 'AIzaSyCiGKacdGtyde-R4I6Z77Tvwt4yGzWXtDw';
+// à gertinovideaste.github.io — sans risque même visible dans ce fichier.
+const YT_API_KEY = 'AIzaSyBQtbbkoBeypub5Joqf5DdD7iS0HImFIOc';
 const UPLOADS_PLAYLIST_ID = 'UUKHgYX0vGJ_hnzshUNARHXQ';
 
 async function fetchAllVideos() {
