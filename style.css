@@ -132,7 +132,7 @@ h1, h2 {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: url('assets/hero-portrait.png') center 15% / cover no-repeat, var(--bg);
+  background: url('assets/gertino-portrait.png') center 22% / cover no-repeat, var(--bg);
 }
 
 .hero-overlay {
