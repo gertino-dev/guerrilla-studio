@@ -132,8 +132,14 @@ h1, h2 {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: url('assets/gertino-portrait.png') center 22% / cover no-repeat, var(--bg);
+  background: url('assets/gertino-portrait.png') 72% 20% / cover no-repeat, var(--bg);
   filter: brightness(1.35) contrast(1.05);
+}
+
+@media (max-width: 720px) {
+  .hero-bg {
+    background-position: 80% 20%;
+  }
 }
 
 .hero-overlay {
