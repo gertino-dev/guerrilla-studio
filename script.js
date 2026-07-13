@@ -39,10 +39,6 @@ const lightboxPlayer = document.getElementById('lightboxPlayer');
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-function formatDate(date) {
-  return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-}
-
 function videoCard(video) {
   const card = document.createElement('article');
   card.className = 'video-card';
@@ -55,10 +51,7 @@ function videoCard(video) {
       <img src="${video.thumbnail}" alt="" loading="lazy">
       <div class="play-badge"></div>
     </div>
-    <div class="video-title">
-      ${video.title}
-      <span class="video-date">${formatDate(video.published)}</span>
-    </div>
+    <div class="video-title">${video.title}</div>
   `;
 
   const open = () => openLightbox(video.id);

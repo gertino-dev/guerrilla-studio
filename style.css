@@ -363,14 +363,6 @@ section { padding: 7rem 0; }
   color: var(--text);
 }
 
-.video-date {
-  display: block;
-  margin-top: 0.35rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 300;
-}
-
 /* Contact */
 .contact { text-align: center; background: var(--bg-alt); }
 .contact-text { color: var(--text-muted); max-width: 480px; margin: 0 auto 2rem; }
